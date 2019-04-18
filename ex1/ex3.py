@@ -11,7 +11,7 @@ class Eratosthenes(object):
 
     def compute_sieve(self):
 
-        self.sieve[0, 1] = False
+        self.sieve[:2] = False
 
         for i in range(2, self.limit+1):
             if self.sieve[i]:
