@@ -1,0 +1,64 @@
+\documentclass[a4paper]{article}
+\usepackage[top=1in, bottom=1.25in, left=1.25in, right=1.25in]{geometry}
+
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[utf8]{inputenc}
+ 
+\usepackage{amsthm}
+\usepackage{enumitem}   
+\usepackage{listings}
+
+\lstset{
+  breaklines=true,
+  numbers=left,
+  language=Python
+}
+
+\begin{document}
+
+%% Title, authors and addresses
+
+\title{Brain Inspired Computing - Problem Set 2}
+
+\author{Sven Bordukat, Paul Meehan}
+
+\date{\today}
+
+\maketitle
+
+\section*{Exercise 1}
+\begin{itemize}
+    \item[a)]
+    The capacitance of a spherical capacitor is
+    \begin{align*}
+        C&=4\pi\epsilon_0\epsilon_r\frac{R_2R_1}{R_2-R_1}
+    \end{align*}
+    In our case we have $R_1 = 10\mu m$ and $R_2 = 9.995\mu m$.
+    This gives us a capacitance of
+    \begin{align*}
+        C&=4\pi\epsilon_0*3*\frac{10* 9.995}{10-9.995}\mu m\\
+        &=6.67 pF
+        C_{specific} &= \frac{C}{A}\\
+        &= \frac{6.67pF}{4\pi r^2}\\
+        &= \frac{6.67pF}{4\pi (10 \mu m)^2}\\
+        &= 0.531 \mu F/cm^2
+    \end{align*}
+
+    \item[b)]
+    As per the definition of capacity, a shift of $U=10mV$ is achieved when
+    a charge of $Q=U*C=10mV*6.67pF=6.67*10^{-14}=4.16*10^5e$ is moved.
+    As a Na\textsuperscript{+} ion has a charge of $1e$, this results in
+    $4.16*10^5$ Na\textsuperscript{+} ions being moved. The volume of the cell
+    is $4189\mu m^3$, which means that the total number of ions inside the cell
+    is about $4189*3*10^7=1.25*10^{11}$. Compared to the total
+    number of ions on the inside, the shift of $10mV$ moves about $3.3*10^{-4}\%$
+    of the ions.
+    \item[c)]
+
+\end{itemize}<++>
+
+\section*{Exercise 2}
+\end{document}
