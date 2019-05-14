@@ -1,0 +1,92 @@
+\documentclass[a4paper]{article}
+\usepackage[top=1in, bottom=1.25in, left=1.25in, right=1.25in]{geometry}
+
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[utf8]{inputenc}
+ 
+\usepackage{amsthm}
+\usepackage{enumitem}   
+\usepackage{listings}
+
+\lstset{
+  breaklines=true,
+  numbers=left,
+  language=Python
+}
+
+\begin{document}
+
+%% Title, authors and addresses
+
+\title{Brain Inspired Computing - Problem Set 1}
+
+\author{Sven Bordukat, Paul Meehan}
+
+\date{\today}
+
+\maketitle
+
+\section*{Exercise 1}
+\begin{itemize}
+    \item[a)]
+    Let $A:=F_u+G_w$, $B:=F_uG_w-F_wG_u$ and $C:=(F_u+G_w)^2-4(F_uG_w-F_wG_u)$.
+    Assume $A>0$. From the eigenvalue equation
+    \begin{align*}
+        \lambda_{\pm} &= \frac{1}{2}(F_u+G_w\pm\sqrt{(F_u+G_w)^2-4(F_uG_w-F_wG_u)})\\
+                             &= \frac{1}{2}(A \pm \sqrt{A^2-4B})
+        \label{eq:eigen}
+    \end{align*}
+    we derive that if $C\geq0$, $\lambda_+>0$ as well. If $C<0$, $\lambda_{\pm}$ can be
+    expressed through $\lambda_{\pm}=r\pm i*\omega$ with $r=A/2>0$.
+    However, any positive $\lambda$ leads to growth, which means that the model is
+    not stable under these conditions. In the case of $C>0$, we have a saddle or
+    an unstable situation, depending on whether $\lambda_-$ is positive or negative;
+    in the case of $C<0$ we have a growing spiral.
+    Therefore, $A<0$ must hold true.
+    In the case of $C<0$, this is enough, as any solution that satisfies $A<0$
+    will lead to $\lambda_{\pm}=r\pm i*\omega$ with $r<0$.
+    However, for $C>0$, we need to make sure that $\lambda_+<0$ in any case.
+    To satisfy this condition, $\sqrt{C}<abs(A)=\sqrt{A^2}$ must hold true.
+    Expansion of $C$ leads to $\sqrt{A^2-4B}<\sqrt{A^2}$. From this we can easily
+    see that $F_uG_w-F_wG_u=B>0$ must hold true.
+
+\item[b)]
+The fixpoints are $(-\frac{3}{2}, -\frac{3}{8})$ and
+$(0,\frac{15}{8})$, respectively. For the case of $I=0$ we can simply calculate
+the conditions given above. We have
+\begin{align*}
+    F_u &= 1-u^2\\
+    F_w &= -1\\
+    G_u &= \epsilon*b\\
+    G_w &= -\epsilon*w\\
+\end{align*}
+which gives us
+\begin{align*}
+    F_u+G_w &= 1-u^2-\epsilon*w\\
+    &= 1-\frac{9}{4}+0.1*\frac{3}{8}\\
+    &= \frac{8-18+0.3}{8}\\
+    &= -\frac{9.7}{8}<0
+\end{align*}
+and
+\begin{align*}
+    F_u*G_w-F_w*G_u &= (1-u^2)*(-\epsilon*w) - (-1*\epsilon*b)\\
+    &= \epsilon(-\frac{5}{8}*\frac{3}{8}+\frac{3}{2})\\
+    &= \epsilon(\frac{3}{2}-\frac{15}{64}) > 0\\
+\end{align*}
+Therefore the fixpoint for $I=0$ is stable.\\
+The nullcline of $w$ is given through $G=0\Leftrightarrow w=a+b*u$.
+For $I=15/8$ lets look at a point on the nullcline of $w$ at coordinates $(u_0+\delta u, a+b*(u_0+\delta u))$ with $\delta u>0, \delta u \ll 1$.
+As $u_0=0$, we get
+\begin{align*}
+    F&=\delta u - \frac{{\delta u}^3}{3}-\frac{15}{8}+\delta u *\frac{3}{2}+\frac{15}{8}\\
+    &\approx \frac{5}{2} \delta u > 0\\
+\end{align*}
+This means that the arrows point away from the fixpoint (at least on the nullcline)
+and the fixpoint is therefore not stable.
+\end{itemize}
+
+\section*{Exercise 2}
+\end{document}
