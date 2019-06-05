@@ -70,7 +70,7 @@ fig, axes = plt.subplots(nrows=3, figsize=(20, 10))
 #axes[0].vlines(spiketrain, 0, 1)
 axes[0].hist(np.diff(spiketrain), range=(0, 0.1), label='ISIs', bins=50, density=True)
 axes[0].plot(x, theo_distr(x, ref, 1/rate), label='theoretical distribution')
-axes[0].set_title('Histogram over ISIs and theoretical curve')
+axes[0].set_title('Histogram over ISIs of single spike train and theoretical curve')
 axes[0].legend()
 
 #b)
@@ -126,6 +126,7 @@ axes[2].plot(x, st.poisson.pmf(x, mu),label='theoretical expectation', ls='none'
 axes[2].set_title('Number of spikes within a 10ms-window')
 axes[2].legend()
 plt.show()
+plt.savefig('2ab.png')
 
 fig, axes = plt.subplots(nrows=3, figsize=(20, 10))
 fig.suptitle('Power spectra')
@@ -141,3 +142,4 @@ for i, train in enumerate([spiketrain, sum_spiketrain, replacement_train]):
 axes[2].set_xlabel('freq')
 axes[2].set_ylabel('power')
 plt.show()
+plt.savefig('2c.png')
