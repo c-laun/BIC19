@@ -51,6 +51,7 @@ if __name__=="__main__":
     x = np.arange(0.8/r,10/r,0.05/r)
     plt.plot(x,T*exp(x,1/r,tau),color="red")
     plt.savefig("poisson_tau.png")
+    plt.xlabel("Poisson ISIs with absolute refractory time")
     plt.clf()
 
     #b)
@@ -68,10 +69,11 @@ if __name__=="__main__":
 
     bins = np.arange(0,10/nu/K,0.5/nu/K)
 
-    plt.hist(np.diff(spikes1), bins=bins, histtype="step", label="Combined")
-    plt.hist(np.diff(spikes2), bins=bins, histtype="step", label="Single")
+    plt.hist(np.diff(spikes1), bins=bins, histtype="step", label="Pooled")
+    plt.hist(np.diff(spikes2), bins=bins, histtype="step", label="Adapted")
     plt.legend()
-    plt.savefig("poisson_combined_isi.png")
+    plt.xlabel("Pooled and adapted (regular poisson with increased firing rate) ISIs")
+    plt.savefig("poisson_pooled_isi.png")
     plt.clf()
 
     bins = np.arange(0,T,0.1)
@@ -79,14 +81,15 @@ if __name__=="__main__":
     hist1 = np.histogram(spikes1,bins=bins)[0]
     hist2 = np.histogram(spikes2,bins=bins)[0]
 
-    x = np.arange(0,max(hist1)+1.6,1)
+    x = np.arange(50,max(hist1)+5,1)
 
-    plt.hist(hist1, bins=x, histtype="step", label="Combined")
-    plt.hist(hist2, bins=x, histtype="step", label="Single")
+    plt.hist(hist1, bins=x, histtype="step", label="Pooled")
+    plt.hist(hist2, bins=x, histtype="step", label="Adapted")
     plt.plot(x,len(hist1)*poiss.pmf(x,0.1*nu*K), label="Theory")
 
+    plt.xlabel("Pooled and adapted (regular poisson with increased firing rate) spikes per 10ms")
     plt.legend()
-    plt.savefig("poisson_combined_10ms.png")
+    plt.savefig("poisson_pooled_10ms.png")
     plt.clf()
 
     #c)
@@ -96,7 +99,8 @@ if __name__=="__main__":
     ps_Knu = power_spectrum(spikes2,T)
 
     plt.plot(ps_R[0],ps_R[1],label="R")
-    plt.plot(ps_comb[0],ps_comb[1],label="Combined")
-    plt.plot(ps_Knu[0],ps_Knu[1],label="Single")
+    plt.plot(ps_comb[0],ps_comb[1],label="Pooled")
+    plt.plot(ps_Knu[0],ps_Knu[1],label="Adapted")
+    plt.xlabel("Power spectrum")
     plt.legend()
     plt.savefig("power_spectrum.png")
