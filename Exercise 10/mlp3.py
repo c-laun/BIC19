@@ -43,8 +43,8 @@ def backpropagate(X, YT):
     # INSERT YOUR CODE HERE !!!
     cost = Cost(Y, YT)
 
-    dLdY = -(Y-YT)[...]
-    dYdU2 = np.ones((2, 2))
+    dLdY = -(Y-YT)
+    dYdU2 = np.identity(2)
     dU2dZ = W
     dU2dW = Z[None]
     dZdU1 = f_act_prime(U1)[None, ...]
@@ -90,10 +90,9 @@ pl.plot(cost)
 
 loss = []
 
-test = np.load('func_approx_test.npz')
 
-for x, y in zip(test['X'], test['Y']):
-    yt = propagate(x)[0][0, 0]
+for x, yt in zip(X, YT):
+    y = propagate(x)[0]
     loss += [Cost(y, yt)]
 
 pl.figure()
