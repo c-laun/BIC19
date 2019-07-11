@@ -135,7 +135,7 @@ ax.set_xscale('log')
 ax.set_yscale('log')
 ax.set_xlabel("Time [steps]", labelpad=2)
 
-# pl.savefig('3a.png')
+pl.savefig('3a.png')
 pl.show()
 
 
@@ -146,7 +146,136 @@ pl.savefig('3b.png')
 pl.show()
 
 
+# c) compute the marginals
+
+import matplotlib.pyplot as plt
+Pnet = Pnet[-1]
+
+marg = []
+
+for k in range(K):
+    ind = (slice(None),) * k + (1,) + (slice(None),) * (K - k - 1)
+    marg += [Pnet[ind].sum()]
+
+plt.bar(np.arange(K), marg)
+plt.title('Marginals for $p(z_k =1)$')
+plt.xlabel('$k$')
+plt.ylabel('p')
+plt.savefig('3c.png')
+plt.show()
+
+"""
+The marginals from P_theo can be computed the same way 
+(computing all probabilities and then summing over all p(z) with z_k = 1).
+However for that we have to compute all p(z) first, which has complexity 2^K.
+"""
+
+# d)
+
+b[1] = 100
+net = GibbsSamplerBM(W, b)  # Generate network
+
+K = net.K  # Number of binary random variables
+Ptheo = net.calc_p_theo()  # theoretically calculated probabilities from energy E(x)
+
+# # # # # # # # # # # # # # # # # # # # #
+# # # C O L L E C T   S A M P L E S # # #
+# # # # # # # # # # # # # # # # # # # # #
+
+Z = np.zeros((T, K))  # This is where the samples will be stored.
+
+# # # # # # # # # # # # # # # # # # # #
+# # # R U N   S I M U L A T I O N # # #
+# # # # # # # # # # # # # # # # # # # #
+
+for t in range(T):  # For all time steps
+    Z[t] = net.advance()  # generate a sample and store it.
+
+# # # # # # # # # # # # # # # # # #
+# # #   E V A L U A T I O N   # # #
+# # # # # # # # # # # # # # # # # #
 
 
+# Calculate the Kullback Leibler divergence D_KL between the sampled and the target distribution
+
+T_DKL = 10 ** np.arange(1, np.log10(T) + 0.1).astype(
+    int)  # Define some time points when to evaluate the Kullback-Leiber divergence
+s = [2] * K  # shape of the state space
+Pnet = np.zeros([len(T_DKL)] + s)  # array to store network sampled probabilities
+for i, t_dkl in enumerate(T_DKL):  # For each time point of interest...
+    for z in Z[:t_dkl]:  # For all samples z(t)
+        z = (i,) + tuple(z.astype(int))  # convert to appropriate index format
+        Pnet[z] += 1  # count the occurrence of z
+    Pnet[i] /= t_dkl  # devide by total number of samples to get the probabilities.
+
+D = np.zeros(len(T_DKL))  # array to store the D_KL values
+for i, p in enumerate(Pnet):
+    D[i] = D_KL(p, Ptheo)  # Calculate the D_KL
+
+# # # # # # # # # # # # # # # #
+# # #   P L O T T I N G   # # #
+# # # # # # # # # # # # # # # #
+
+# figure setup
+fig = pl.figure(figsize=(12.0, 3.25))
+rect = 0.07, 0.17, 0.50, 0.78
+ax_bar = fig.add_axes(rect, ylabel="Probability P(z)")
+rect = 0.69, 0.17, 0.28, 0.78
+ax_dkl = fig.add_axes(rect, ylabel="D_KL (P_net || P_theo)")
+
+# bar plot of probs
+ax = ax_bar
+xlabels = [str(x).replace(',', '').replace(' ', '')[1:-1] for x in np.ndindex(*([2] * K))]
+kwargs = dict(align='center', fc='lightblue', ec='darkblue', zorder=1)
+ax.bar(-0.20 + np.arange(2 ** K), Pnet[-1].flatten(), width=0.35, label="P_net(z)", **kwargs)
+kwargs = dict(align='center', fc='darkgrey', ec='grey', zorder=0)
+ax.bar(+0.20 + np.arange(2 ** K), Ptheo.flatten(), width=0.35, label="P_theo(z)", **kwargs)
+ax.set_xlim(-0.5, 2 ** K - 0.5)
+ax.set_ylim(0., 1.1 * ax.yaxis.get_data_interval()[1])
+ax.set_xticks(np.arange(2 ** K))
+ax.set_xticklabels(xlabels, rotation='vertical', family='monospace')
+leg = ax.legend(loc="upper right")
+
+# D_KL plot
+ax = ax_dkl
+ax.plot(T_DKL, D, 'r', lw=1.)
+ax.plot(T_DKL, D, 'o', ms=5., mec='r', mfc='r')
+ax.set_xlim(0.75 * T_DKL[0], 1.33 * T_DKL[-1])
+ax.set_xscale('log')
+ax.set_yscale('log')
+ax.set_xlabel("Time [steps]", labelpad=2)
+
+pl.savefig('3d_a.png')
+pl.show()
+
+
+pl.figure()
+pl.imshow(Z[:100].T)
+pl.title('First 100 samples of Z')
+pl.savefig('3d_b.png')
+pl.show()
+
+
+# c) compute the marginals
+
+import matplotlib.pyplot as plt
+Pnet = Pnet[-1]
+
+marg = []
+
+for k in range(K):
+    ind = (slice(None),) * k + (1,) + (slice(None),) * (K - k - 1)
+    marg += [Pnet[ind].sum()]
+
+plt.bar(np.arange(K), marg)
+plt.title('Marginals for $p(z_k =1)$')
+plt.xlabel('$k$')
+plt.ylabel('p')
+plt.savefig('3d_c.png')
+plt.show()
+
+"""
+The network does sample from the correct conditional distribution.
+"""
 
 
